@@ -8,7 +8,9 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "lint": "tslint ./src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build",
+    "preversion": "npm run lint"
   },
   "keywords": [],
   "license": "MIT",

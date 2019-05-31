@@ -6,7 +6,14 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "outDir": "./lib",
-    "declaration": true
+    "declaration": true,
+    "lib": [
+      "es2015",
+      "es5",
+      "es6",
+      "esnext.asynciterable",
+      "dom"
+    ],
   },
   "include": ["src/**/*"]
 }
