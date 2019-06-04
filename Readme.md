@@ -29,7 +29,8 @@ const naturalOrder = require("natural-order");
 naturalOrder: (list: any[], 
                sortBy?: string[], 
                orderBy?: "desc" | "asc" | ("desc" | "asc")[], 
-               options?: { blankAtTop?: boolean, caseSensitive?: boolean }) => any[]
+               options?: { blankAtTop?: boolean, caseSensitive?: boolean }
+              ) => any[]
 
 ```
 

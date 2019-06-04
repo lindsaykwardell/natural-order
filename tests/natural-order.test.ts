@@ -89,6 +89,21 @@ describe("natural-order", () => {
     ]);
   });
 
+  it("Deep clones objects in list", () => {
+    const list = [
+      { name: "adam" },
+      { name: "bob" },
+      { name: "george" },
+      { name: "steve" }
+    ];
+
+    const sorted = naturalOrder(list);
+
+    expect(sorted).toEqual(list);
+    expect(sorted === list).toBe(false);
+    expect(sorted[0] === list[0]).toBe(false);
+  });
+
   it("Defaults to putting blank lines at the bottom", () => {
     const list = ["z", "", "a"];
 

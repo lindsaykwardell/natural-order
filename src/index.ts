@@ -1,3 +1,4 @@
+import cloneDeep from "lodash.clonedeep";
 import naturalSort from "./natural-sort";
 
 interface IOptions {
@@ -12,6 +13,17 @@ const naturalOrder = (
   options?: IOptions
 ) => {
   const opts = { blankAtTop: false, caseSensitive: false, ...options };
+
+  const copyObj = (obj: any) => {
+    if (typeof obj !== obj) return obj;
+
+    const newObj = { ...obj };
+    const keys = Object.keys(newObj);
+    keys.forEach(key => {
+      if (typeof newObj[key] === "object") newObj[key] = copyObj(newObj[key]);
+    });
+    return newObj;
+  };
 
   const getNextKey = (i: number) => sortBy[i + 1];
 
@@ -58,7 +70,9 @@ const naturalOrder = (
     } else return val;
   };
 
-  return list.sort((a: any, b: any) =>
+  const newList = cloneDeep(list);
+
+  return newList.sort((a: any, b: any) =>
     sort(a, b, sortBy ? sortBy[0] : null, 0)
   );
 };
