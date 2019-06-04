@@ -1,6 +1,7 @@
 # natural-order
 
-**Sort arrays of strings or objects naturally**
+## **Sort arrays of strings or objects naturally**
+
 **_Sorting with support for numbers, dates, unicode and more._**
 
 <a id="/features"></a>&nbsp;
