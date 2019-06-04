@@ -25,7 +25,7 @@ const naturalSort = (opts?: IOptions) => {
 
   return (a: string, b: string) => {
     const EQUAL = 0;
-    const GREATER = options.direction == "desc" ? -1 : 1;
+    const GREATER = options.direction === "desc" ? -1 : 1;
     const SMALLER = -GREATER;
 
     const re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi;
@@ -35,9 +35,14 @@ const naturalSort = (opts?: IOptions) => {
     const ore = /^0/;
 
     const normalize = function normalize(value: string) {
-      const string = "" + value;
-      return options.caseSensitive ? string : string.toLowerCase();
+      const str = "" + value;
+      return options.caseSensitive ? str : str.toLowerCase();
     };
+
+    // Return immediately if at least one of the values is null or undefined.
+    if (!a && !b) return EQUAL;
+    if (!a && b) return GREATER;
+    if (a && !b) return SMALLER;
 
     // Normalize values to strings
     const x = normalize(a).replace(sre, "") || "";
@@ -63,11 +68,12 @@ const naturalSort = (opts?: IOptions) => {
     // numeric, hex or date detection
     const xD = x.match(hre)
       ? parseInt(x.match(hre).toString())
-      : xN.length != 1 && x.match(dre) && Date.parse(x);
+      : xN.length !== 1 && x.match(dre) && Date.parse(x);
     const yD = y.match(hre)
       ? parseInt(y.match(hre).toString())
       : (xD && y.match(dre) && Date.parse(y)) || null;
-    let oFxNcL, oFyNcL;
+    let oFxNcL;
+    let oFyNcL;
 
     // first try and sort Hex codes or Dates
     if (yD) {

@@ -29,7 +29,7 @@ const naturalOrder = (
   const sort = (a: any, b: any, key: string, i: number): number => {
     if (!key) {
       if (typeof a === "string") {
-        return naturalSort()(a, b);
+        return naturalSort({ direction: getCurrentOrder(i) })(a, b);
       } else if (typeof a === "object") {
         const key = Object.keys(a)[0];
         return sort(a, b, key, i);

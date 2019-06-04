@@ -1,11 +1,12 @@
 {
   "name": "natural-order",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Lindsay Wardell",
   "description": "Sort an array of strings or objects naturally.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "ex": "ts-node ./src/test.ts",
     "test": "jest --config jestconfig.json",
     "lint": "tslint ./src/index.ts",
     "build": "tsc",
