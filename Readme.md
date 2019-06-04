@@ -21,14 +21,23 @@
 ```javascript
 naturalOrder: (list: any[], sortBy?: string[], orderBy?: "desc" | "asc" | ("desc" | "asc")[]) => any[]
 
-/*
-
-list: any[] - any list (strings, numbers, or objects)
-sortBy?: string[] - The keys by which to sort. May be null. If sorting objects, defaults to the first key it finds.
-orderBy?: "desc" | "asc" | ("desc" | "asc")[] - Order by which to sort. Defaults to ascending. Enter a value for each key you are using for sorting. If not enough values are passed, the last provided will be used when they run out. (example: You may just pass "desc", and all keys will be sorted in descending order.)
-
-*/
 ```
+
+`list: any[]`
+
+any list (strings, numbers, or objects)
+
+`sortBy?: string[]`
+
+The keys by which to sort. May be null. If sorting objects, defaults to the first key it finds.
+
+`orderBy?: "desc" | "asc" | ("desc" | "asc")[]`
+
+Order by which to sort. Defaults to ascending. Enter a value for each key you are using for sorting.
+If not enough values are passed, the last provided will be used when they run out.
+(example: You may just pass "desc", and all keys will be sorted in descending order.)
+
+<a id="/examples"></a>&nbsp;
 
 ## Examples
 
@@ -76,9 +85,6 @@ naturalOrder(list3);
 ## Credits
 
 This project uses code from _[natural-sort](https://github.com/studio-b12/natural-sort)_ for its natural sorting method.
-
-
-
 
 <a id="/license"></a>&nbsp;
 
