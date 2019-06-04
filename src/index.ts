@@ -1,10 +1,18 @@
 import naturalSort from "./natural-sort";
 
+interface IOptions {
+  blankAtTop?: boolean;
+  caseSensitive?: boolean;
+}
+
 const naturalOrder = (
   list: any[],
   sortBy?: string[],
-  orderBy?: Array<"desc" | "asc"> | "desc" | "asc"
+  orderBy?: Array<"desc" | "asc"> | "desc" | "asc",
+  options?: IOptions
 ) => {
+  const opts = { blankAtTop: false, caseSensitive: false, ...options };
+
   const getNextKey = (i: number) => sortBy[i + 1];
 
   const getCurrentOrder = (i: number): "asc" | "desc" => {
@@ -29,17 +37,22 @@ const naturalOrder = (
   const sort = (a: any, b: any, key: string, i: number): number => {
     if (!key) {
       if (typeof a === "string") {
-        return naturalSort({ direction: getCurrentOrder(i) })(a, b);
+        return naturalSort({
+          blankAtTop: opts.blankAtTop,
+          caseSensitive: opts.caseSensitive,
+          direction: getCurrentOrder(i)
+        })(a, b);
       } else if (typeof a === "object") {
         const key = Object.keys(a)[0];
         return sort(a, b, key, i);
       }
     }
 
-    const val = naturalSort({ direction: getCurrentOrder(i) })(
-      currentKey(a, key),
-      currentKey(b, key)
-    );
+    const val = naturalSort({
+      blankAtTop: opts.blankAtTop,
+      caseSensitive: opts.caseSensitive,
+      direction: getCurrentOrder(i)
+    })(currentKey(a, key), currentKey(b, key));
     if (val === 0 && getNextKey(i)) {
       return sort(a, b, getNextKey(i), i + 1);
     } else return val;

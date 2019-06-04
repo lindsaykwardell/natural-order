@@ -20,7 +20,10 @@
 ## Usage
 
 ```javascript
-naturalOrder: (list: any[], sortBy?: string[], orderBy?: "desc" | "asc" | ("desc" | "asc")[]) => any[]
+naturalOrder: (list: any[], 
+               sortBy?: string[], 
+               orderBy?: "desc" | "asc" | ("desc" | "asc")[], 
+               options?: { blankAtTop?: boolean, caseSensitive?: boolean }) => any[]
 
 ```
 
@@ -37,6 +40,14 @@ The keys by which to sort. May be null. If sorting objects, defaults to the firs
 Order by which to sort. Defaults to ascending. Enter a value for each key you are using for sorting.
 If not enough values are passed, the last provided will be used when they run out.
 (example: You may just pass "desc", and all keys will be sorted in descending order.)
+
+`options?: { blankAtTop?: boolean, caseSensitive?: boolean}`
+
+Optional parameters:
+- blankAtTop: If true, places null or blank parameters opposite the order option
+  - If ascending, null or blank are at the top.
+  - If descending, null or blank are at the bottom.
+- caseSensitive: If true, capital letters are ranked higher than lowercase.
 
 <a id="/examples"></a>&nbsp;
 
@@ -79,6 +90,23 @@ naturalOrder(list3);
 //   { name: { first: 'bob', last: 'temple' } },
 //   { name: { first: 'george', last: 'martin' } },
 //   { name: { first: 'steve', last: 'martin' } } ]
+
+const list4 = ["a", "B"];
+
+naturalOrder(list4, null, "asc", { caseSensitive: true });
+
+// ["B", "a"]
+
+const list5 = ["z", "", "a"];
+
+naturalOrder(list5);
+
+// ["a", "z", ""]
+
+naturalOrder(list5, null, "asc", { blankAtTop: true });
+
+// ["", "a", "z"]
+
 ```
 
 <a id="/credits"></a>&nbsp;

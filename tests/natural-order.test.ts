@@ -88,4 +88,28 @@ describe("natural-order", () => {
       { name: { first: "steve", last: "martin" } }
     ]);
   });
+
+  it("Defaults to putting blank lines at the bottom", () => {
+    const list = ["z", "", "a"];
+
+    const sorted = naturalOrder(list);
+
+    expect(sorted).toEqual(["a", "z", ""]);
+  });
+
+  it("Allows putting blank lines at the top", () => {
+    const list = ["z", "", "a"];
+
+    const sorted = naturalOrder(list, null, "asc", { blankAtTop: true });
+
+    expect(sorted).toEqual(["", "a", "z"]);
+  });
+
+  it("Allows sorting capital letters higher", () => {
+    const list = ["a", "B"];
+
+    const sorted = naturalOrder(list, null, "asc", { caseSensitive: true });
+
+    expect(sorted).toEqual(["B", "a"]);
+  });
 });

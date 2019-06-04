@@ -18,6 +18,7 @@
 interface IOptions {
   caseSensitive?: boolean;
   direction?: "desc" | "asc";
+  blankAtTop?: boolean;
 }
 
 const naturalSort = (opts?: IOptions) => {
@@ -41,8 +42,8 @@ const naturalSort = (opts?: IOptions) => {
 
     // Return immediately if at least one of the values is null or undefined.
     if (!a && !b) return EQUAL;
-    if (!a && b) return GREATER;
-    if (a && !b) return SMALLER;
+    if (!a && b) return options.blankAtTop ? SMALLER : GREATER;
+    if (a && !b) return options.blankAtTop ? GREATER : SMALLER;
 
     // Normalize values to strings
     const x = normalize(a).replace(sre, "") || "";
@@ -62,8 +63,8 @@ const naturalSort = (opts?: IOptions) => {
 
     // Return immediately if at least one of the values is empty.
     if (!x && !y) return EQUAL;
-    if (!x && y) return GREATER;
-    if (x && !y) return SMALLER;
+    if (!x && y) return options.blankAtTop ? SMALLER : GREATER;
+    if (x && !y) return options.blankAtTop ? GREATER : SMALLER;
 
     // numeric, hex or date detection
     const xD = x.match(hre)
