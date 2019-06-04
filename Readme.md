@@ -20,6 +20,12 @@
 ## Usage
 
 ```javascript
+// ES6
+import naturalOrder from "natural-order";
+
+// CommonJS
+const naturalOrder = require("natural-order");
+
 naturalOrder: (list: any[], 
                sortBy?: string[], 
                orderBy?: "desc" | "asc" | ("desc" | "asc")[], 

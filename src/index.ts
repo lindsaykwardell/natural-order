@@ -63,4 +63,5 @@ const naturalOrder = (
   );
 };
 
-export default naturalOrder;
+export = naturalOrder;
+// export default naturalOrder;

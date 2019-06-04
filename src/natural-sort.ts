@@ -111,4 +111,4 @@ const naturalSort = (opts?: IOptions) => {
   };
 };
 
-export default naturalSort;
+export = naturalSort;
