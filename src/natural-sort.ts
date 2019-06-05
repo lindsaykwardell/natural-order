@@ -68,10 +68,10 @@ const naturalSort = (opts?: IOptions) => {
 
     // numeric, hex or date detection
     const xD = x.match(hre)
-      ? parseInt(x.match(hre).toString())
+      ? parseInt(x.match(hre).toString(), 10)
       : xN.length !== 1 && x.match(dre) && Date.parse(x);
     const yD = y.match(hre)
-      ? parseInt(y.match(hre).toString())
+      ? parseInt(y.match(hre).toString(), 10)
       : (xD && y.match(dre) && Date.parse(y)) || null;
     let oFxNcL;
     let oFyNcL;

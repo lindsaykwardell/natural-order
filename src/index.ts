@@ -78,4 +78,3 @@ const naturalOrder = (
 };
 
 export = naturalOrder;
-// export default naturalOrder;
