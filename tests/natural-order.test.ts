@@ -91,10 +91,10 @@ describe("natural-order", () => {
 
   it("Deep clones objects in list", () => {
     const list = [
-      { name: "adam" },
-      { name: "bob" },
-      { name: "george" },
-      { name: "steve" }
+      { name: { first: "adam", last: "temple" } },
+      { name: { first: "bob", last: "temple" } },
+      { name: { first: "george", last: "martin" } },
+      { name: { first: "steve", last: "martin" } }
     ];
 
     const sorted = naturalOrder(list);
@@ -102,6 +102,10 @@ describe("natural-order", () => {
     expect(sorted).toEqual(list);
     expect(sorted === list).toBe(false);
     expect(sorted[0] === list[0]).toBe(false);
+
+    list[0].name.first = "john";
+
+    expect(sorted[0].name.first).toBe("adam");
   });
 
   it("Defaults to putting blank lines at the bottom", () => {
