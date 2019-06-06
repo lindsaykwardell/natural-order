@@ -6,7 +6,6 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "ex": "ts-node ./src/test.ts",
     "test": "jest --config jestconfig.json",
     "lint": "tslint ./src/index.ts",
     "build": "tsc",
