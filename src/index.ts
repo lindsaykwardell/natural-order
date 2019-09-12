@@ -9,7 +9,7 @@ interface IOptions {
 const naturalOrder = (
   list: any[],
   sortBy?: string[],
-  orderBy?: Array<"desc" | "asc"> | "desc" | "asc",
+  orderBy?: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc",
   options?: IOptions
 ) => {
   const opts = { blankAtTop: false, caseSensitive: false, ...options };
@@ -29,10 +29,16 @@ const naturalOrder = (
 
   const getCurrentOrder = (i: number): "asc" | "desc" => {
     if (!orderBy) return "asc";
-    if (typeof orderBy !== "string") {
-      if (!orderBy[i]) return orderBy[orderBy.length - 1];
-      else return orderBy[i];
-    } else return orderBy;
+    if (typeof orderBy !== "string" && typeof orderBy !== "number") {
+      if (!orderBy[i]) return getOrderMethod(orderBy[orderBy.length - 1]);
+      else return getOrderMethod(orderBy[i]);
+    } else return getOrderMethod(orderBy);
+  };
+
+  const getOrderMethod = (orderBy: 1 | -1 | "desc" | "asc"): "asc" | "desc" => {
+    if (typeof orderBy === "string") return orderBy;
+    else if (orderBy === 1) return "asc";
+    else return "desc";
   };
 
   const currentKey = (root: any, key: string): string => {

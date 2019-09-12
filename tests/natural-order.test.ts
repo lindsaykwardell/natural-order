@@ -131,4 +131,12 @@ describe("natural-order", () => {
 
     expect(sorted).toEqual(["B", "a"]);
   });
+
+  it("Allows sorting by number", () => {
+    const list = ["a", "b", "c"]
+
+    const sorted = naturalOrder(list, null, -1);
+
+    expect(sorted).toEqual(["c", "b", "a"])
+  })
 });

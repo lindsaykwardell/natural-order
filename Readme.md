@@ -28,7 +28,7 @@ const naturalOrder = require("natural-order");
 
 naturalOrder: (list: any[], 
                sortBy?: string[], 
-               orderBy?: "desc" | "asc" | ("desc" | "asc")[], 
+               orderBy?: 1 | -1 | "asc" | "desc" | ("asc" | "desc")[] | (1 | -1)[], 
                options?: { blankAtTop?: boolean, caseSensitive?: boolean }
               ) => any[]
 
@@ -42,11 +42,13 @@ any list (strings, numbers, or objects)
 
 The keys by which to sort. May be null. If sorting objects, defaults to the first key it finds.
 
-`orderBy?: "desc" | "asc" | ("desc" | "asc")[]`
+`orderBy?: 1 | -1 | "asc" | "desc" | ("asc" | "desc")[] | (1 | -1)[]`
 
 Order by which to sort. Defaults to ascending. Enter a value for each key you are using for sorting.
 If not enough values are passed, the last provided will be used when they run out.
 (example: You may just pass "desc", and all keys will be sorted in descending order.)
+
+The number values 1 and -1 can be used instead of "asc" and "desc", respectively.
 
 `options?: { blankAtTop?: boolean, caseSensitive?: boolean}`
 
@@ -68,6 +70,10 @@ naturalOrder(list);
 // ["a", "b", "z"]
 
 naturalOrder(list, null, "desc");
+
+// ["z", "b", "a"]
+
+naturalOrder(list, null, -1);
 
 // ["z", "b", "a"]
 
