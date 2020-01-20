@@ -128,7 +128,7 @@ naturalOrder(list5).with({ blankAtTop: true }).sort();
 
 ## Migration
 
-All options from verion 0.3.0 are still available with the new API. For example:
+All options from verion 0.3.0 are still available with the new API. Alternatively, if you prefer the old syntax, it is still available, but you will need to call `.sort()` still. 
 
 ```javascript
 const list = ["a", "b", "c", "A"]
@@ -140,6 +140,13 @@ const sorted1 = naturalOrder(list, null, "desc", { caseSensitive: true })
 const sorted2 = naturalOrder(list).with({ caseSensitive: true }).orderBy("desc").sort()
 
 sorted1[0] === sorted2[0] // true
+
+// Alternative syntax
+
+const sorted3 = naturalOrder(list, null, "desc", { caseSensitive: true }).sort()
+
+sorted1[0] === sorted3[0] // true
+
 ```
 
 

@@ -1,11 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import naturalSort from "./natural-sort";
 
-interface IOptions {
-  blankAtTop?: boolean;
-  caseSensitive?: boolean;
-}
-
 type Options = {
   blankAtTop?: boolean;
   caseSensitive?: boolean;
@@ -19,21 +14,32 @@ class NaturalList<A> {
   private options: Options;
   private order: Order;
 
-  constructor(list: A[]) {
+  constructor(
+    list: A[],
+    sortBy?: string[],
+    orderBy?: Order,
+    options?: Options
+  ) {
     this.initialList = cloneDeep<A[]>(list);
     this.list = cloneDeep<A[]>(list);
-    (this.options = {
+    this.options = {
       blankAtTop: false,
-      caseSensitive: false
-    }),
-      (this.order = "asc");
+      caseSensitive: false,
+      ...options
+    };
+    this.order = orderBy ? orderBy : "asc";
   }
 
-  public with(options: { blankAtTop?: boolean, caseSensitive?: boolean}): NaturalList<A> {
+  public with(options: {
+    blankAtTop?: boolean;
+    caseSensitive?: boolean;
+  }): NaturalList<A> {
     this.options = { blankAtTop: false, caseSensitive: false, ...options };
     return this;
   }
-  public orderBy(orderBy: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc"): NaturalList<A> {
+  public orderBy(
+    orderBy: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc"
+  ): NaturalList<A> {
     this.order = orderBy;
     return this;
   }
@@ -109,8 +115,13 @@ class NaturalList<A> {
   }
 }
 
-const naturalOrder = <A>(list: A[]): NaturalList<A> => {
-  const naturalList = new NaturalList<A>(list);
+const naturalOrder = <A>(
+  list: A[],
+  sortBy?: string[],
+  orderBy?: Order,
+  options?: Options
+): NaturalList<A> => {
+  const naturalList = new NaturalList<A>(list, sortBy, orderBy, options);
 
   return naturalList;
 };
