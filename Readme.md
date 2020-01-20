@@ -26,23 +26,30 @@ import naturalOrder from "natural-order";
 // CommonJS
 const naturalOrder = require("natural-order");
 
-naturalOrder: (list: any[], 
-               sortBy?: string[], 
-               orderBy?: 1 | -1 | "asc" | "desc" | ("asc" | "desc")[] | (1 | -1)[], 
-               options?: { blankAtTop?: boolean, caseSensitive?: boolean }
-              ) => any[]
+naturalOrder: <A>(list: A[]) => NaturalList<A>
+
+class NaturalList<A> {
+  with: (options: { blankAtTop?: boolean, caseSensitive?: boolean}) => NaturalList<A>
+  orderBy: (order: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc") => NaturalList<A>
+  sort: (sortBy?: string[]) => NaturalList<A>
+  toArray: () => A[]
+}
 
 ```
 
-`list: any[]`
+`list: A[]`
 
-any list (strings, numbers, or objects)
+Any list (strings, numbers, or objects)
 
-`sortBy?: string[]`
+`options: { blankAtTop?: boolean, caseSensitive?: boolean}`
 
-The keys by which to sort. May be null. If sorting objects, defaults to the first key it finds.
+Optional parameters:
+- blankAtTop: If true, places null or blank parameters opposite the order option
+  - If ascending, null or blank are at the top.
+  - If descending, null or blank are at the bottom.
+- caseSensitive: If true, capital letters are ranked higher than lowercase.
 
-`orderBy?: 1 | -1 | "asc" | "desc" | ("asc" | "desc")[] | (1 | -1)[]`
+`order: 1 | -1 | "asc" | "desc" | ("asc" | "desc")[] | (1 | -1)[]`
 
 Order by which to sort. Defaults to ascending. Enter a value for each key you are using for sorting.
 If not enough values are passed, the last provided will be used when they run out.
@@ -50,13 +57,9 @@ If not enough values are passed, the last provided will be used when they run ou
 
 The number values 1 and -1 can be used instead of "asc" and "desc", respectively.
 
-`options?: { blankAtTop?: boolean, caseSensitive?: boolean}`
+`sortBy?: string[]`
 
-Optional parameters:
-- blankAtTop: If true, places null or blank parameters opposite the order option
-  - If ascending, null or blank are at the top.
-  - If descending, null or blank are at the bottom.
-- caseSensitive: If true, capital letters are ranked higher than lowercase.
+The keys by which to sort. May be null. If sorting objects, defaults to the first key it finds.
 
 <a id="/examples"></a>&nbsp;
 
@@ -65,21 +68,21 @@ Optional parameters:
 ```javascript
 const list = ["b", "z", "a"];
 
-naturalOrder(list);
+naturalOrder(list).sort().toArray();
 
 // ["a", "b", "z"]
 
-naturalOrder(list, null, "desc");
+naturalOrder(list).orderBy("desc").sort().toArray();
 
 // ["z", "b", "a"]
 
-naturalOrder(list, null, -1);
+naturalOrder(list).orderBy(-1).sort().toArray();
 
 // ["z", "b", "a"]
 
 const list2 = [{ name: "George" }, { name: "Fred" }, { name: "Alice" }];
 
-naturalOrder(list2, ["name"]);
+naturalOrder(list2).sort(["name"]).toArray();
 
 // [{name: "Alice"}, {name: "Fred""}, {name: "George"}]
 
@@ -90,14 +93,14 @@ const list3 = [
   { name: { first: "adam", last: "temple" } }
 ];
 
-naturalOrder(list3, ["name.last", "name.first"]);
+naturalOrder(list3).sort(["name.last", "name.first"]).toArray();
 
 // [ { name: { first: 'george', last: 'martin' } },
 //   { name: { first: 'steve', last: 'martin' } },
 //   { name: { first: 'adam', last: 'temple' } },
 //   { name: { first: 'bob', last: 'temple' } } ]
 
-naturalOrder(list3);
+naturalOrder(list3).sort().toArray();
 
 // [ { name: { first: 'adam', last: 'temple' } },
 //   { name: { first: 'bob', last: 'temple' } },
@@ -106,21 +109,41 @@ naturalOrder(list3);
 
 const list4 = ["a", "B"];
 
-naturalOrder(list4, null, "asc", { caseSensitive: true });
+naturalOrder(list4).with({ caseSensitive: true }).sort().toArray();
 
 // ["B", "a"]
 
 const list5 = ["z", "", "a"];
 
-naturalOrder(list5);
+naturalOrder(list5).sort().toArray();
 
 // ["a", "z", ""]
 
-naturalOrder(list5, null, "asc", { blankAtTop: true });
+naturalOrder(list5).with({ blankAtTop: true }).sort().toArray();
 
 // ["", "a", "z"]
 
 ```
+
+<a id="/migration"></a>&nbsp;
+
+## Migration
+
+All options from verion 0.3.0 are still available with the new API. For example:
+
+```javascript
+const list = ["a", "b", "c", "A"]
+
+// Old syntax
+const sorted1 = naturalOrder(list, null, "desc", { caseSensitive: true })
+
+// New syntax
+const sorted2 = naturalOrder(list).with({ caseSensitive: true }).orderBy("desc").sort().toArray()
+
+sorted1[0] === sorted2[0] // true
+```
+
+
 
 <a id="/credits"></a>&nbsp;
 
