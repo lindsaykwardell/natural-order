@@ -13,6 +13,7 @@ class NaturalList<A> {
   private list: A[];
   private options: Options;
   private order: Order;
+  private sortKey: string[];
 
   constructor(
     list: A[],
@@ -28,6 +29,7 @@ class NaturalList<A> {
       ...options
     };
     this.order = orderBy ? orderBy : "asc";
+    this.sortKey = sortBy
   }
 
   public with(options: {
@@ -44,18 +46,19 @@ class NaturalList<A> {
     return this;
   }
   public sort(sortBy?: string[]): A[] {
-    const copyObj = (obj: any) => {
-      if (typeof obj !== obj) return obj;
+    const initialSortBy = (input: string[], key: string[]) => {
+      if (!input && key !== null) {
+        return key
+      } else if (input) {
+        return input
+      } else {
+        return null
+      }
+    }  
 
-      const newObj = { ...obj };
-      const keys = Object.keys(newObj);
-      keys.forEach(key => {
-        if (typeof newObj[key] === "object") newObj[key] = copyObj(newObj[key]);
-      });
-      return newObj;
-    };
+    const key = initialSortBy(sortBy, this.sortKey)
 
-    const getNextKey = (i: number) => sortBy[i + 1];
+    const getNextKey = (i: number) => key[i + 1];
 
     const getCurrentOrder = (i: number): "asc" | "desc" => {
       if (!this.order) return "asc";
@@ -105,10 +108,10 @@ class NaturalList<A> {
       if (val === 0 && getNextKey(i)) {
         return sort(a, b, getNextKey(i), i + 1);
       } else return val;
-    };
+    }; 
 
     this.list.sort((a: any, b: any) =>
-      sort(a, b, sortBy ? sortBy[0] : null, 0)
+      sort(a, b, key ? key[0] : null, 0)
     );
 
     return this.list;

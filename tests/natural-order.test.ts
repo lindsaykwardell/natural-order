@@ -178,4 +178,18 @@ describe("natural-order", () => {
 
     expect(sorted2[0]).toEqual(sorted3[0]);
   });
+
+  it("Alternative syntax returns same results", () => {
+    const list = [
+      { name: { first: "bob", last: "temple" } },
+      { name: { first: "steve", last: "martin" } },
+      { name: { first: "george", last: "martin" } },
+      { name: { first: "adam", last: "temple" } }
+    ];
+
+    const sorted1 = naturalOrder(list).sort(["name.last", "name.first"])
+    const sorted2 = naturalOrder(list, ["name.last", "name.first"]).sort()
+
+    expect(sorted1[0]).toEqual(sorted2[0])
+  })
 });
