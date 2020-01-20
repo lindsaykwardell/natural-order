@@ -37,7 +37,7 @@ class NaturalList<A> {
     this.order = orderBy;
     return this;
   }
-  public sort(sortBy?: string[]): NaturalList<A> {
+  public sort(sortBy?: string[]): A[] {
     const copyObj = (obj: any) => {
       if (typeof obj !== obj) return obj;
 
@@ -105,9 +105,6 @@ class NaturalList<A> {
       sort(a, b, sortBy ? sortBy[0] : null, 0)
     );
 
-    return this;
-  }
-  public toArray(): A[] {
     return this.list;
   }
 }

@@ -4,7 +4,7 @@ describe("natural-order", () => {
   it("sorts an array of strings", () => {
     const list = ["z", "b", "d", "c"];
 
-    const sorted = naturalOrder(list).sort().toArray();
+    const sorted = naturalOrder(list).sort();
 
     expect(sorted).toEqual(["b", "c", "d", "z"]);
   });
@@ -12,7 +12,7 @@ describe("natural-order", () => {
   it("allows sorting in descending order", () => {
     const list = ["z", "b", "d", "c"];
 
-    const sorted = naturalOrder(list).orderBy("desc").sort().toArray();
+    const sorted = naturalOrder(list).orderBy("desc").sort();
 
     expect(sorted).toEqual(["z", "d", "c", "b"]);
   });
@@ -25,7 +25,7 @@ describe("natural-order", () => {
       { name: "adam" }
     ];
 
-    const sorted = naturalOrder(list).sort(["name"]).toArray();
+    const sorted = naturalOrder(list).sort(["name"]);
 
     expect(sorted).toEqual([
       { name: "adam" },
@@ -43,7 +43,7 @@ describe("natural-order", () => {
       { name: "adam" }
     ];
 
-    const sorted = naturalOrder(list).orderBy(["desc"]).sort(["name"]).toArray();
+    const sorted = naturalOrder(list).orderBy(["desc"]).sort(["name"]);
 
     expect(sorted).toEqual([
       { name: "steve" },
@@ -61,7 +61,7 @@ describe("natural-order", () => {
       { name: { first: "adam", last: "temple" } }
     ];
 
-    const sorted = naturalOrder(list).sort(["name.last", "name.first"]).toArray();
+    const sorted = naturalOrder(list).sort(["name.last", "name.first"]);
 
     expect(sorted).toEqual([
       { name: { first: "george", last: "martin" } },
@@ -79,7 +79,7 @@ describe("natural-order", () => {
       { name: { first: "adam", last: "temple" } }
     ];
 
-    const sorted = naturalOrder(list).sort().toArray();
+    const sorted = naturalOrder(list).sort();
 
     expect(sorted).toEqual([
       { name: { first: "adam", last: "temple" } },
@@ -97,7 +97,7 @@ describe("natural-order", () => {
       { name: { first: "steve", last: "martin" } }
     ];
 
-    const sorted = naturalOrder(list).sort().toArray();
+    const sorted = naturalOrder(list).sort();
 
     expect(sorted).toEqual(list);
     expect(sorted === list).toBe(false);
@@ -111,7 +111,7 @@ describe("natural-order", () => {
   it("Defaults to putting blank lines at the bottom", () => {
     const list = ["z", "", "a"];
 
-    const sorted = naturalOrder(list).sort().toArray();
+    const sorted = naturalOrder(list).sort();
 
     expect(sorted).toEqual(["a", "z", ""]);
   });
@@ -119,7 +119,7 @@ describe("natural-order", () => {
   it("Allows putting blank lines at the top", () => {
     const list = ["z", "", "a"];
 
-    const sorted = naturalOrder(list).with({blankAtTop: true}).sort().toArray();
+    const sorted = naturalOrder(list).with({blankAtTop: true}).sort();
 
     expect(sorted).toEqual(["", "a", "z"]);
   });
@@ -127,7 +127,7 @@ describe("natural-order", () => {
   it("Allows sorting capital letters higher", () => {
     const list = ["a", "B"];
 
-    const sorted = naturalOrder(list).with({caseSensitive: true}).sort().toArray();
+    const sorted = naturalOrder(list).with({caseSensitive: true}).sort();
 
     expect(sorted).toEqual(["B", "a"]);
   });
@@ -135,16 +135,8 @@ describe("natural-order", () => {
   it("Allows sorting by number", () => {
     const list = ["a", "b", "c"]
 
-    const sorted = naturalOrder(list).orderBy(-1).sort().toArray();
+    const sorted = naturalOrder(list).orderBy(-1).sort();
 
     expect(sorted).toEqual(["c", "b", "a"])
-  })
-
-  it("Allows sorting twice", () => {
-    const list = ["a", "b", "c"]
-
-    const sorted = naturalOrder(list).orderBy("desc").sort().orderBy("asc").sort().toArray()
-
-    expect(sorted).toEqual(["a", "b", "c"])
   })
 });

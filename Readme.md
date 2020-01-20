@@ -31,8 +31,7 @@ naturalOrder: <A>(list: A[]) => NaturalList<A>
 class NaturalList<A> {
   with: (options: { blankAtTop?: boolean, caseSensitive?: boolean}) => NaturalList<A>
   orderBy: (order: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc") => NaturalList<A>
-  sort: (sortBy?: string[]) => NaturalList<A>
-  toArray: () => A[]
+  sort: (sortBy?: string[]) => A[]
 }
 
 ```
@@ -68,21 +67,21 @@ The keys by which to sort. May be null. If sorting objects, defaults to the firs
 ```javascript
 const list = ["b", "z", "a"];
 
-naturalOrder(list).sort().toArray();
+naturalOrder(list).sort();
 
 // ["a", "b", "z"]
 
-naturalOrder(list).orderBy("desc").sort().toArray();
+naturalOrder(list).orderBy("desc").sort();
 
 // ["z", "b", "a"]
 
-naturalOrder(list).orderBy(-1).sort().toArray();
+naturalOrder(list).orderBy(-1).sort();
 
 // ["z", "b", "a"]
 
 const list2 = [{ name: "George" }, { name: "Fred" }, { name: "Alice" }];
 
-naturalOrder(list2).sort(["name"]).toArray();
+naturalOrder(list2).sort(["name"]);
 
 // [{name: "Alice"}, {name: "Fred""}, {name: "George"}]
 
@@ -93,14 +92,14 @@ const list3 = [
   { name: { first: "adam", last: "temple" } }
 ];
 
-naturalOrder(list3).sort(["name.last", "name.first"]).toArray();
+naturalOrder(list3).sort(["name.last", "name.first"]);
 
 // [ { name: { first: 'george', last: 'martin' } },
 //   { name: { first: 'steve', last: 'martin' } },
 //   { name: { first: 'adam', last: 'temple' } },
 //   { name: { first: 'bob', last: 'temple' } } ]
 
-naturalOrder(list3).sort().toArray();
+naturalOrder(list3).sort();
 
 // [ { name: { first: 'adam', last: 'temple' } },
 //   { name: { first: 'bob', last: 'temple' } },
@@ -109,17 +108,17 @@ naturalOrder(list3).sort().toArray();
 
 const list4 = ["a", "B"];
 
-naturalOrder(list4).with({ caseSensitive: true }).sort().toArray();
+naturalOrder(list4).with({ caseSensitive: true }).sort();
 
 // ["B", "a"]
 
 const list5 = ["z", "", "a"];
 
-naturalOrder(list5).sort().toArray();
+naturalOrder(list5).sort();
 
 // ["a", "z", ""]
 
-naturalOrder(list5).with({ blankAtTop: true }).sort().toArray();
+naturalOrder(list5).with({ blankAtTop: true }).sort();
 
 // ["", "a", "z"]
 
@@ -138,7 +137,7 @@ const list = ["a", "b", "c", "A"]
 const sorted1 = naturalOrder(list, null, "desc", { caseSensitive: true })
 
 // New syntax
-const sorted2 = naturalOrder(list).with({ caseSensitive: true }).orderBy("desc").sort().toArray()
+const sorted2 = naturalOrder(list).with({ caseSensitive: true }).orderBy("desc").sort()
 
 sorted1[0] === sorted2[0] // true
 ```
