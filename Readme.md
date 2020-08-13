@@ -39,7 +39,11 @@ class NaturalList<A> {
   sortBy?: string[], 
   orderBy?: Order, 
   options?: Options)
-: (a: any, b: any) => number
+: (a: any, b: any) => {
+  with: (options: { blankAtTop?: boolean, caseSensitive?: boolean}) => naturalSortOptions
+  orderBy: (order: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc") => naturalSortOptions
+  sort: (sortBy?: string[]) => number
+}
 
 
 ```
