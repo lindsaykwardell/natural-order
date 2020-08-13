@@ -1,3 +1,13 @@
+/*!
+ * natural-order
+ * ===============
+ * Sort an array of strings, numbers, or objects naturally.
+ *
+ * http://github.com/lindsaykwardell/natural-order
+ * MIT License, © Lindsay Wardell 2019-2020
+ *
+ */
+
 import cloneDeep from "lodash.clonedeep";
 import naturalSort from "./natural-sort";
 
