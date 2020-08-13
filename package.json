@@ -1,6 +1,6 @@
 {
   "name": "natural-order",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "Lindsay Wardell",
   "description": "Sort an array of strings, numbers, or objects naturally.",
   "main": "lib/index.js",
@@ -36,7 +36,8 @@
     "webpack-cli": "^3.3.11"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "dist/**/*"
   ],
   "dependencies": {
     "lodash.clonedeep": "^4.5.0"
