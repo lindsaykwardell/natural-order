@@ -15,6 +15,8 @@ class NaturalList<A> {
   private order: Order;
   private sortKey: string[];
 
+  public key: string[];
+
   constructor(
     list: A[],
     sortBy?: string[],
@@ -26,10 +28,10 @@ class NaturalList<A> {
     this.options = {
       blankAtTop: false,
       caseSensitive: false,
-      ...options
+      ...options,
     };
     this.order = orderBy ? orderBy : "asc";
-    this.sortKey = sortBy
+    this.sortKey = sortBy;
   }
 
   public with(options: {
@@ -45,73 +47,74 @@ class NaturalList<A> {
     this.order = orderBy;
     return this;
   }
+
+  public initialSortBy = (input: string[]) => {
+    if (!input && this.sortKey !== null) {
+      this.key = this.sortKey;
+    } else if (input) {
+      this.key = input;
+    } else {
+      this.key = null;
+    }
+  };
+
+  public getCurrentOrder = (i: number): "asc" | "desc" => {
+    if (!this.order) return "asc";
+    if (typeof this.order !== "string" && typeof this.order !== "number") {
+      if (!this.order[i]) {
+        return this.getOrderMethod(this.order[this.order.length - 1]);
+      } else return this.getOrderMethod(this.order[i]);
+    } else return this.getOrderMethod(this.order);
+  };
+
+  public getOrderMethod = (
+    orderBy: 1 | -1 | "desc" | "asc"
+  ): "asc" | "desc" => {
+    if (typeof orderBy === "string") return orderBy;
+    else if (orderBy === 1) return "asc";
+    else return "desc";
+  };
+
+  public getNextKey = (i: number) => this.key[i + 1];
+
+  public currentKey = (root: any, key: string): string => {
+    const nodes: string[] = key.split(".");
+    let elem: any = root;
+    nodes.forEach((node) => (elem = elem[node]));
+    if (elem && typeof elem !== "object") return elem.toString();
+    else if (elem && typeof elem === "object") {
+      const newKey = Object.keys(elem)[0];
+      return this.currentKey(elem, newKey);
+    } else return elem;
+  };
+
+  public sortElements = (a: any, b: any, key: string, i: number): number => {
+    if (!key) {
+      if (typeof a === "string") {
+        return naturalSort({
+          ...this.options,
+          direction: this.getCurrentOrder(i),
+        })(a, b);
+      } else if (typeof a === "object") {
+        const key = Object.keys(a)[0];
+        return this.sortElements(a, b, key, i);
+      }
+    }
+
+    const val = naturalSort({
+      ...this.options,
+      direction: this.getCurrentOrder(i),
+    })(this.currentKey(a, key), this.currentKey(b, key));
+    if (val === 0 && this.getNextKey(i)) {
+      return this.sortElements(a, b, this.getNextKey(i), i + 1);
+    } else return val;
+  };
+
   public sort(sortBy?: string[]): A[] {
-    const initialSortBy = (input: string[], key: string[]) => {
-      if (!input && key !== null) {
-        return key
-      } else if (input) {
-        return input
-      } else {
-        return null
-      }
-    }  
-
-    const key = initialSortBy(sortBy, this.sortKey)
-
-    const getNextKey = (i: number) => key[i + 1];
-
-    const getCurrentOrder = (i: number): "asc" | "desc" => {
-      if (!this.order) return "asc";
-      if (typeof this.order !== "string" && typeof this.order !== "number") {
-        if (!this.order[i])
-          return getOrderMethod(this.order[this.order.length - 1]);
-        else return getOrderMethod(this.order[i]);
-      } else return getOrderMethod(this.order);
-    };
-
-    const getOrderMethod = (
-      orderBy: 1 | -1 | "desc" | "asc"
-    ): "asc" | "desc" => {
-      if (typeof orderBy === "string") return orderBy;
-      else if (orderBy === 1) return "asc";
-      else return "desc";
-    };
-
-    const currentKey = (root: any, key: string): string => {
-      const nodes: string[] = key.split(".");
-      let elem: any = root;
-      nodes.forEach(node => (elem = elem[node]));
-      if (elem && typeof elem !== "object") return elem.toString();
-      else if (elem && typeof elem === "object") {
-        const newKey = Object.keys(elem)[0];
-        return currentKey(elem, newKey);
-      } else return elem;
-    };
-
-    const sort = (a: any, b: any, key: string, i: number): number => {
-      if (!key) {
-        if (typeof a === "string") {
-          return naturalSort({
-            ...this.options,
-            direction: getCurrentOrder(i)
-          })(a, b);
-        } else if (typeof a === "object") {
-          const key = Object.keys(a)[0];
-          return sort(a, b, key, i);
-        }
-      }
-
-      const val = naturalSort({
-        ...this.options,
-        direction: getCurrentOrder(i)
-      })(currentKey(a, key), currentKey(b, key));
-      if (val === 0 && getNextKey(i)) {
-        return sort(a, b, getNextKey(i), i + 1);
-      } else return val;
-    }; 
+    this.initialSortBy(sortBy);
 
     this.list.sort((a: any, b: any) =>
-      sort(a, b, key ? key[0] : null, 0)
+      this.sortElements(a, b, this.key ? this.key[0] : null, 0)
     );
 
     return this.list;
@@ -127,6 +130,41 @@ const naturalOrder = <A>(
   const naturalList = new NaturalList<A>(list, sortBy, orderBy, options);
 
   return naturalList;
+};
+
+naturalOrder.naturalSort = (
+  sortBy?: string[],
+  orderBy?: Order,
+  options?: Options
+) => {
+  const naturalList = new NaturalList([], sortBy, orderBy, options);
+
+  const naturalSortOptions = {
+    orderBy(orderBy: Order) {
+      naturalList.orderBy(orderBy)
+
+      return naturalSortOptions;
+    },
+    with(options: Options) {
+      naturalList.with(options)
+
+      return naturalSortOptions
+    },
+    sort(sortBy?: string[]) {
+      return (a: any, b: any) => {
+        naturalList.initialSortBy(sortBy);
+
+        return naturalList.sortElements(
+          a,
+          b,
+          naturalList.key ? naturalList.key[0] : null,
+          0
+        );
+      };
+    },
+  };
+
+  return naturalSortOptions;
 };
 
 export = naturalOrder;
