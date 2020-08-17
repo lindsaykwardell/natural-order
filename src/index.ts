@@ -92,7 +92,7 @@ const naturalOrder = <T>(
     } else return val;
   };
 
-  return (a: any, b: any) => {
+  return (a: T, b: T) => {
     return sortElements(a, b, key ? key[0] : null, 0);
   };
 };
