@@ -24,15 +24,13 @@ type NaturalOrderParameters = {
   sortBy?: string[];
 };
 
-const naturalOrder = <T>({
-  options,
-  orderBy = "asc",
-  sortBy = null,
-}: NaturalOrderParameters = {
-  options: {},
-  orderBy: "asc",
-  sortBy: null,
-}) => {
+const naturalOrder = <T>(
+  { options, orderBy = "asc", sortBy = null }: NaturalOrderParameters = {
+    options: {},
+    orderBy: "asc",
+    sortBy: null,
+  }
+) => {
   let opts: Options = {
     blankAtTop: false,
     caseSensitive: false,
@@ -52,9 +50,7 @@ const naturalOrder = <T>({
     } else return getOrderMethod(order);
   };
 
-  const getOrderMethod = (
-    orderBy: 1 | -1 | "desc" | "asc",
-  ): "asc" | "desc" => {
+  const getOrderMethod = (orderBy: 1 | -1 | "desc" | "asc"): "asc" | "desc" => {
     if (typeof orderBy === "string") return orderBy;
     else if (orderBy === 1) return "asc";
     else return "desc";
@@ -63,6 +59,7 @@ const naturalOrder = <T>({
   const getNextKey = (i: number) => key[i + 1];
 
   const currentKey = (root: any, key: string): string => {
+    if (!key) return root;
     const nodes: string[] = key.split(".");
     let elem: any = root;
     nodes.forEach((node) => (elem = elem[node]));
@@ -96,12 +93,7 @@ const naturalOrder = <T>({
   };
 
   return (a: any, b: any) => {
-    return sortElements(
-      a,
-      b,
-      key ? key[0] : null,
-      0,
-    );
+    return sortElements(a, b, key ? key[0] : null, 0);
   };
 };
 
@@ -111,7 +103,7 @@ naturalOrder.immutableSort = <T>(
     options: {},
     orderBy: "asc",
     sortBy: null,
-  },
+  }
 ) => {
   return cloneDeep<Array<T>>(list).sort(naturalOrder(params));
 };
