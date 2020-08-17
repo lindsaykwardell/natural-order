@@ -1,6 +1,6 @@
 {
   "name": "natural-order",
-  "version": "2.0.0-rc.2",
+  "version": "2.0.0-rc.3",
   "author": "Lindsay Wardell",
   "description": "Sort an array of strings, numbers, or objects naturally.",
   "main": "lib/index.js",

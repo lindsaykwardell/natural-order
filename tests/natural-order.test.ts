@@ -9,6 +9,14 @@ describe("natural-order", () => {
     expect(list).toEqual(["b", "c", "d", "z"]);
   });
 
+  it("sorts an array of numbers", () => {
+    const list = [1, 4, 3, 2, 7, 1, 0];
+
+    list.sort(naturalOrder());
+
+    expect(list).toEqual([1, 1, 2, 3, 4, 7, 0]);
+  });
+
   it("allows sorting in descending order", () => {
     const list = ["z", "b", "d", "c"];
 
@@ -43,9 +51,7 @@ describe("natural-order", () => {
       { name: "adam" },
     ];
 
-    list.sort(
-      naturalOrder({ orderBy: "desc", sortBy: ["name"] }),
-    );
+    list.sort(naturalOrder({ orderBy: "desc", sortBy: ["name"] }));
 
     expect(list).toEqual([
       { name: "steve" },
@@ -63,9 +69,7 @@ describe("natural-order", () => {
       { name: { first: "adam", last: "temple" } },
     ];
 
-    list.sort(
-      naturalOrder({ sortBy: ["name.last", "name.first"] }),
-    );
+    list.sort(naturalOrder({ sortBy: ["name.last", "name.first"] }));
 
     expect(list).toEqual([
       { name: { first: "george", last: "martin" } },
@@ -123,11 +127,13 @@ describe("natural-order", () => {
   it("Allows putting blank lines at the top", () => {
     const list = ["z", "", "a"];
 
-    list.sort(naturalOrder({
-      options: {
-        blankAtTop: true,
-      },
-    }));
+    list.sort(
+      naturalOrder({
+        options: {
+          blankAtTop: true,
+        },
+      })
+    );
 
     expect(list).toEqual(["", "a", "z"]);
   });
@@ -135,11 +141,13 @@ describe("natural-order", () => {
   it("Allows sorting capital letters higher", () => {
     const list = ["a", "B"];
 
-    list.sort(naturalOrder({
-      options: {
-        caseSensitive: true,
-      },
-    }));
+    list.sort(
+      naturalOrder({
+        options: {
+          caseSensitive: true,
+        },
+      })
+    );
 
     expect(list).toEqual(["B", "a"]);
   });

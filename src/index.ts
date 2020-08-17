@@ -56,7 +56,7 @@ const naturalOrder = <T>(
     else return "desc";
   };
 
-  const getNextKey = (i: number) => key[i + 1];
+  const getNextKey = (i: number) => key ? key[i + 1] : null;
 
   const currentKey = (root: any, key: string): string => {
     if (!key) return root;
