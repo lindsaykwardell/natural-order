@@ -1,20 +1,20 @@
-import naturalOrder, { naturalSort } from "../src/index";
+import naturalOrder from "../src/index";
 
 describe("natural-order", () => {
   it("sorts an array of strings", () => {
     const list = ["z", "b", "d", "c"];
 
-    const sorted = naturalOrder(list).sort();
+    list.sort(naturalOrder());
 
-    expect(sorted).toEqual(["b", "c", "d", "z"]);
+    expect(list).toEqual(["b", "c", "d", "z"]);
   });
 
   it("allows sorting in descending order", () => {
     const list = ["z", "b", "d", "c"];
 
-    const sorted = naturalOrder(list).orderBy("desc").sort();
+    list.sort(naturalOrder({ orderBy: "desc" }));
 
-    expect(sorted).toEqual(["z", "d", "c", "b"]);
+    expect(list).toEqual(["z", "d", "c", "b"]);
   });
 
   it("sorts an array of objects by key", () => {
@@ -25,9 +25,9 @@ describe("natural-order", () => {
       { name: "adam" },
     ];
 
-    const sorted = naturalOrder(list).sort(["name"]);
+    list.sort(naturalOrder({ sortBy: ["name"] }));
 
-    expect(sorted).toEqual([
+    expect(list).toEqual([
       { name: "adam" },
       { name: "bob" },
       { name: "george" },
@@ -43,9 +43,11 @@ describe("natural-order", () => {
       { name: "adam" },
     ];
 
-    const sorted = naturalOrder(list).orderBy(["desc"]).sort(["name"]);
+    list.sort(
+      naturalOrder({ orderBy: "desc", sortBy: ["name"] }),
+    );
 
-    expect(sorted).toEqual([
+    expect(list).toEqual([
       { name: "steve" },
       { name: "george" },
       { name: "bob" },
@@ -61,9 +63,11 @@ describe("natural-order", () => {
       { name: { first: "adam", last: "temple" } },
     ];
 
-    const sorted = naturalOrder(list).sort(["name.last", "name.first"]);
+    list.sort(
+      naturalOrder({ sortBy: ["name.last", "name.first"] }),
+    );
 
-    expect(sorted).toEqual([
+    expect(list).toEqual([
       { name: { first: "george", last: "martin" } },
       { name: { first: "steve", last: "martin" } },
       { name: { first: "adam", last: "temple" } },
@@ -79,9 +83,9 @@ describe("natural-order", () => {
       { name: { first: "adam", last: "temple" } },
     ];
 
-    const sorted = naturalOrder(list).sort();
+    list.sort(naturalOrder());
 
-    expect(sorted).toEqual([
+    expect(list).toEqual([
       { name: { first: "adam", last: "temple" } },
       { name: { first: "bob", last: "temple" } },
       { name: { first: "george", last: "martin" } },
@@ -89,7 +93,7 @@ describe("natural-order", () => {
     ]);
   });
 
-  it("Deep clones objects in list", () => {
+  it("Deep clones list", () => {
     const list = [
       { name: { first: "adam", last: "temple" } },
       { name: { first: "bob", last: "temple" } },
@@ -97,7 +101,7 @@ describe("natural-order", () => {
       { name: { first: "steve", last: "martin" } },
     ];
 
-    const sorted = naturalOrder(list).sort();
+    const sorted = naturalOrder.immutableSort(list);
 
     expect(sorted).toEqual(list);
     expect(sorted === list).toBe(false);
@@ -111,145 +115,40 @@ describe("natural-order", () => {
   it("Defaults to putting blank lines at the bottom", () => {
     const list = ["z", "", "a"];
 
-    const sorted = naturalOrder(list).sort();
+    list.sort(naturalOrder());
 
-    expect(sorted).toEqual(["a", "z", ""]);
+    expect(list).toEqual(["a", "z", ""]);
   });
 
   it("Allows putting blank lines at the top", () => {
     const list = ["z", "", "a"];
 
-    const sorted = naturalOrder(list).with({ blankAtTop: true }).sort();
+    list.sort(naturalOrder({
+      options: {
+        blankAtTop: true,
+      },
+    }));
 
-    expect(sorted).toEqual(["", "a", "z"]);
+    expect(list).toEqual(["", "a", "z"]);
   });
 
   it("Allows sorting capital letters higher", () => {
     const list = ["a", "B"];
 
-    const sorted = naturalOrder(list).with({ caseSensitive: true }).sort();
+    list.sort(naturalOrder({
+      options: {
+        caseSensitive: true,
+      },
+    }));
 
-    expect(sorted).toEqual(["B", "a"]);
+    expect(list).toEqual(["B", "a"]);
   });
 
   it("Allows sorting by number", () => {
     const list = ["a", "b", "c"];
 
-    const sorted = naturalOrder(list).orderBy(-1).sort();
+    list.sort(naturalOrder({ orderBy: -1 }));
 
-    expect(sorted).toEqual(["c", "b", "a"]);
-  });
-
-  it("Allows similar API to 0.3.0", () => {
-    const list = ["a", "b", "c"];
-
-    const sorted = naturalOrder(list, null, "desc").sort();
-
-    expect(sorted).toEqual(["c", "b", "a"]);
-  });
-
-  it("Matches old syntax results", () => {
-    const list = ["a", "b", "c", "A"];
-
-    // Old syntax
-    // const sorted1 = naturalOrder(list, null, "desc", { caseSensitive: true });
-
-    // New syntax
-    const sorted2 = naturalOrder(list)
-      .with({ caseSensitive: true })
-      .orderBy("desc")
-      .sort();
-
-    // Alternative syntax
-
-    const sorted3 = naturalOrder(list, null, "desc", {
-      caseSensitive: true,
-    }).sort();
-
-    expect(sorted2[0]).toEqual(sorted3[0]);
-  });
-
-  it("Alternative syntax returns same results", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted1 = naturalOrder(list).sort(["name.last", "name.first"]);
-    const sorted2 = naturalOrder(list, ["name.last", "name.first"]).sort();
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
-  });
-
-  it("Hook syntax to plug into standard .sort() method", () => {
-    const list = ["bob", "steve", "george", "adam"];
-
-    const sorted = list.sort(naturalOrder.naturalSort().sort());
-
-    expect(sorted).toEqual(["adam", "bob", "george", "steve"]);
-  });
-
-  it("Hook syntax with options", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted2 = naturalOrder(list, ["name.last", "name.first"])
-      .orderBy("desc")
-      .sort();
-    const sorted1 = list.sort(
-      naturalOrder.naturalSort(["name.last", "name.first"], "desc").sort()
-    );
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
-  });
-
-  it("Hook syntax with options using just naturalSort", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted2 = naturalOrder(list, ["name.last", "name.first"])
-      .orderBy("desc")
-      .sort();
-    const sorted1 = list.sort(
-      naturalSort(["name.last", "name.first"], "desc").sort()
-    );
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
-  });
-
-  it("Hook syntax with chained options.", () => {
-    const list = ["a", "b", "c"];
-
-    const sorted = list.sort(naturalSort().orderBy(-1).sort());
-
-    expect(sorted).toEqual(["c", "b", "a"]);
-  });
-
-  it("Hook syntax with sort keys in final .sort() method", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted2 = naturalOrder(list)
-      .orderBy("desc")
-      .sort(["name.last", "name.first"]);
-    const sorted1 = list.sort(
-      naturalSort().orderBy("desc").sort(["name.last", "name.first"])
-    );
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
+    expect(list).toEqual(["c", "b", "a"]);
   });
 });

@@ -4,5 +4,6 @@ module.exports = {
 
     output: {
         filename: "../dist/natural-order.min.js"//path relative to this file
+        library: "naturalOrder"
     }
   }
