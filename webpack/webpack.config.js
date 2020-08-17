@@ -1,9 +1,9 @@
 module.exports = {
 
-    entry: "./lib/index.js",//path relative to this file
+    entry: "./lib/index.js",
 
     output: {
-        filename: "../dist/natural-order.min.js"//path relative to this file
+        filename: "../dist/natural-order.min.js",
         library: "naturalOrder"
     }
   }
