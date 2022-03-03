@@ -183,4 +183,78 @@ describe("natural-order", () => {
 
     expect(sorted1[0]).toEqual(sorted2[0]);
   });
+
+  it("Sorts an array of numbers", () => {
+    const list = [5, 3, 7, 3, 2, 1, 9, 8, 4, 6];
+
+    const sorted = naturalOrder(list).sort();
+
+    expect(sorted).toEqual([1, 2, 3, 3, 4, 5, 6, 7, 8, 9]);
+  });
+
+  it("Sorts an array of numbers with a 0", () => {
+    const list = [5, 3, 7, 3, 2, 1, 9, 8, 4, 6, 0];
+
+    const sorted = naturalOrder(list).sort();
+
+    expect(sorted).toEqual([0, 1, 2, 3, 3, 4, 5, 6, 7, 8, 9]);
+  });
+
+  it("Reverse sorts an array of numbers with a 0", () => {
+    const list = [5, 3, 7, 3, 2, 1, 9, 8, 4, 6, 0];
+
+    const sorted = naturalOrder(list).orderBy(-1).sort();
+
+    expect(sorted).toEqual([9, 8, 7, 6, 5, 4, 3, 3, 2, 1, 0]);
+  });
+
+  it("Sorts a list of semantic version numbers", () => {
+    const list = [
+      "1.0.4",
+      "1.0.0",
+      "1.0.3",
+      "1.0.1",
+      "1.0.2",
+      "1.1.0",
+      "2.0.5",
+    ];
+
+    const sorted = naturalOrder(list).sort();
+
+    expect(sorted).toEqual([
+      "1.0.0",
+      "1.0.1",
+      "1.0.2",
+      "1.0.3",
+      "1.0.4",
+      "1.1.0",
+      "2.0.5",
+    ]);
+  });
+
+  it("Sorts a list of semantic version numbers with a 0", () => {
+    const list = [
+      "1.0.4",
+      "1.0.0",
+      "1.0.3",
+      "1.0.1",
+      "1.0.2",
+      "1.1.0",
+      "2.0.5",
+      "0.0.0",
+    ];
+
+    const sorted = naturalOrder(list).sort();
+
+    expect(sorted).toEqual([
+      "0.0.0",
+      "1.0.0",
+      "1.0.1",
+      "1.0.2",
+      "1.0.3",
+      "1.0.4",
+      "1.1.0",
+      "2.0.5",
+    ]);
+  });
 });
