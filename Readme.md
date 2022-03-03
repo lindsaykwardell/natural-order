@@ -1,6 +1,8 @@
 # natural-order
 
-### **Sort arrays of strings or objects naturally**
+## **Sort arrays of strings or objects naturally**
+
+[![ci](https://github.com/lindsaykwardell/natural-order/actions/workflows/ci.yml/badge.svg)](https://github.com/lindsaykwardell/natural-order/actions/workflows/ci.yml)
 
 **_Sorting with support for numbers, dates, unicode and more._**
 
