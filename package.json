@@ -1,7 +1,7 @@
 {
   "name": "natural-order",
   "private": false,
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Lindsay Wardell",
   "description": "Sort an array of strings, numbers, or objects naturally.",
   "main": "dist/natural-order.es.js",
