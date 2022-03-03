@@ -1,4 +1,5 @@
-import naturalOrder, { naturalSort } from "../src/index";
+import naturalOrder from "../src/index";
+import { describe, it, expect } from "vitest";
 
 describe("natural-order", () => {
   it("sorts an array of strings", () => {
@@ -179,76 +180,6 @@ describe("natural-order", () => {
 
     const sorted1 = naturalOrder(list).sort(["name.last", "name.first"]);
     const sorted2 = naturalOrder(list, ["name.last", "name.first"]).sort();
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
-  });
-
-  it("Hook syntax to plug into standard .sort() method", () => {
-    const list = ["bob", "steve", "george", "adam"];
-
-    const sorted = list.sort(naturalOrder.naturalSort().sort());
-
-    expect(sorted).toEqual(["adam", "bob", "george", "steve"]);
-  });
-
-  it("Hook syntax with options", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted2 = naturalOrder(list, ["name.last", "name.first"])
-      .orderBy("desc")
-      .sort();
-    const sorted1 = list.sort(
-      naturalOrder.naturalSort(["name.last", "name.first"], "desc").sort()
-    );
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
-  });
-
-  it("Hook syntax with options using just naturalSort", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted2 = naturalOrder(list, ["name.last", "name.first"])
-      .orderBy("desc")
-      .sort();
-    const sorted1 = list.sort(
-      naturalSort(["name.last", "name.first"], "desc").sort()
-    );
-
-    expect(sorted1[0]).toEqual(sorted2[0]);
-  });
-
-  it("Hook syntax with chained options.", () => {
-    const list = ["a", "b", "c"];
-
-    const sorted = list.sort(naturalSort().orderBy(-1).sort());
-
-    expect(sorted).toEqual(["c", "b", "a"]);
-  });
-
-  it("Hook syntax with sort keys in final .sort() method", () => {
-    const list = [
-      { name: { first: "bob", last: "temple" } },
-      { name: { first: "steve", last: "martin" } },
-      { name: { first: "george", last: "martin" } },
-      { name: { first: "adam", last: "temple" } },
-    ];
-
-    const sorted2 = naturalOrder(list)
-      .orderBy("desc")
-      .sort(["name.last", "name.first"]);
-    const sorted1 = list.sort(
-      naturalSort().orderBy("desc").sort(["name.last", "name.first"])
-    );
 
     expect(sorted1[0]).toEqual(sorted2[0]);
   });

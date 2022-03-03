@@ -31,7 +31,8 @@ const naturalSort = (opts?: IOptions) => {
 
     const re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi;
     const sre = /(^[ ]*|[ ]*$)/g;
-    const dre = /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/;
+    const dre =
+      /(^([\w ]+,?[\w ]+)?[\w ]+,?[\w ]+\d+:\d+(:\d+)?[\w ]?|^\d{1,4}[\/\-]\d{1,4}[\/\-]\d{1,4}|^\w+, \w+ \d+, \d{4})/;
     const hre = /^0x[0-9a-f]+$/i;
     const ore = /^0/;
 
@@ -68,17 +69,17 @@ const naturalSort = (opts?: IOptions) => {
 
     // numeric, hex or date detection
     const xD = x.match(hre)
-      ? parseInt(x.match(hre).toString(), 10)
+      ? parseInt(x.match(hre)!.toString(), 10)
       : xN.length !== 1 && x.match(dre) && Date.parse(x);
     const yD = y.match(hre)
-      ? parseInt(y.match(hre).toString(), 10)
+      ? parseInt(y.match(hre)!.toString(), 10)
       : (xD && y.match(dre) && Date.parse(y)) || null;
     let oFxNcL;
     let oFyNcL;
 
     // first try and sort Hex codes or Dates
     if (yD) {
-      if (xD < yD) return SMALLER;
+      if (!xD || xD < yD) return SMALLER;
       else if (xD > yD) return GREATER;
     }
 
@@ -111,4 +112,4 @@ const naturalSort = (opts?: IOptions) => {
   };
 };
 
-export = naturalSort;
+export default naturalSort;

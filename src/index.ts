@@ -19,13 +19,12 @@ type Options = {
 type Order = Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc";
 
 class NaturalList<A> {
-  private initialList: A[];
   private list: A[];
   private options: Options;
   private order: Order;
   private sortKey: string[];
 
-  public key: string[];
+  public key: string[] | null = null;
 
   constructor(
     list: A[],
@@ -33,7 +32,6 @@ class NaturalList<A> {
     orderBy?: Order,
     options?: Options
   ) {
-    this.initialList = cloneDeep<A[]>(list);
     this.list = cloneDeep<A[]>(list);
     this.options = {
       blankAtTop: false,
@@ -41,7 +39,7 @@ class NaturalList<A> {
       ...options,
     };
     this.order = orderBy ? orderBy : "asc";
-    this.sortKey = sortBy;
+    this.sortKey = sortBy || [];
   }
 
   public with(options: {
@@ -58,7 +56,7 @@ class NaturalList<A> {
     return this;
   }
 
-  public initialSortBy = (input: string[]) => {
+  public initialSortBy = (input: string[] | undefined) => {
     if (!input && this.sortKey !== null) {
       this.key = this.sortKey;
     } else if (input) {
@@ -85,7 +83,7 @@ class NaturalList<A> {
     else return "desc";
   };
 
-  public getNextKey = (i: number) => this.key[i + 1];
+  public getNextKey = (i: number) => this.key![i + 1];
 
   public currentKey = (root: any, key: string): string => {
     const nodes: string[] = key.split(".");
@@ -98,7 +96,12 @@ class NaturalList<A> {
     } else return elem;
   };
 
-  public sortElements = (a: any, b: any, key: string, i: number): number => {
+  public sortElements = (
+    a: any,
+    b: any,
+    key: string | null,
+    i: number
+  ): number => {
     if (!key) {
       if (typeof a === "object") {
         const key = Object.keys(a)[0];
@@ -142,39 +145,4 @@ const naturalOrder = <A>(
   return naturalList;
 };
 
-naturalOrder.naturalSort = (
-  sortBy?: string[],
-  orderBy?: Order,
-  options?: Options
-) => {
-  const naturalList = new NaturalList([], sortBy, orderBy, options);
-
-  const naturalSortOptions = {
-    orderBy(orderBy: Order) {
-      naturalList.orderBy(orderBy)
-
-      return naturalSortOptions;
-    },
-    with(options: Options) {
-      naturalList.with(options)
-
-      return naturalSortOptions
-    },
-    sort(sortBy?: string[]) {
-      return (a: any, b: any) => {
-        naturalList.initialSortBy(sortBy);
-
-        return naturalList.sortElements(
-          a,
-          b,
-          naturalList.key ? naturalList.key[0] : null,
-          0
-        );
-      };
-    },
-  };
-
-  return naturalSortOptions;
-};
-
-export = naturalOrder;
+export default naturalOrder;

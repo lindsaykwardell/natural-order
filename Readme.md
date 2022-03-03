@@ -14,7 +14,6 @@
 - Empty strings are after “z”
 - “a” is before “B”
 - Semver-compatible sorting of version numbers
-- _(New)_ Hook to use sorting algorithm from standard `.sort()` array method.
 
 <a id="/usage"></a>&nbsp;
 
@@ -22,7 +21,7 @@
 
 ```javascript
 // ES6
-import naturalOrder, { naturalSort } from "natural-order";
+import naturalOrder from "natural-order";
 
 // CommonJS
 const naturalOrder = require("natural-order");
@@ -34,17 +33,6 @@ class NaturalList<A> {
   orderBy: (order: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc") => NaturalList<A>
   sort: (sortBy?: string[]) => A[]
 }
-
-(method) naturalOrder.naturalSort(
-  sortBy?: string[], 
-  orderBy?: Order, 
-  options?: Options)
-: (a: any, b: any) => {
-  with: (options: { blankAtTop?: boolean, caseSensitive?: boolean}) => naturalSortOptions
-  orderBy: (order: Array<"desc" | "asc"> | Array<1 | -1> | 1 | -1 | "desc" | "asc") => naturalSortOptions
-  sort: (sortBy?: string[]) => number
-}
-
 
 ```
 
@@ -72,10 +60,6 @@ The number values 1 and -1 can be used instead of "asc" and "desc", respectively
 
 The keys by which to sort. May be null. If sorting objects, defaults to the first key it finds.
 
-`naturalOrder.naturalSort()`
-
-This is a method that can be used from a standard `.sort()` array method. This method accepts the same options as above.
-
 <a id="/examples"></a>&nbsp;
 
 ## Examples
@@ -87,28 +71,17 @@ naturalOrder(list).sort();
 
 // ["a", "b", "z"]
 
-list.sort(naturalOrder.naturalSort());
-
-// ["a", "b", "z"]
-
-list.sort(naturalSort())
-
-// ["a", "b", "z"]
-
 naturalOrder(list).orderBy("desc").sort();
-list.sort(naturalSort().orderBy("desc").sort())
 
 // ["z", "b", "a"]
 
 naturalOrder(list).orderBy(-1).sort();
-list.sort(naturalSort().orderBy(-1).sort());
 
 // ["z", "b", "a"]
 
 const list2 = [{ name: "George" }, { name: "Fred" }, { name: "Alice" }];
 
 naturalOrder(list2).sort(["name"]);
-list2.sort(naturalSort().sort(["name"]));
 
 // [{name: "Alice"}, {name: "Fred""}, {name: "George"}]
 
@@ -120,7 +93,6 @@ const list3 = [
 ];
 
 naturalOrder(list3).sort(["name.last", "name.first"]);
-list3.sort(naturalSort().sort(["name.last", "name.first"]));
 
 // [ { name: { first: 'george', last: 'martin' } },
 //   { name: { first: 'steve', last: 'martin' } },
@@ -128,7 +100,6 @@ list3.sort(naturalSort().sort(["name.last", "name.first"]));
 //   { name: { first: 'bob', last: 'temple' } } ]
 
 naturalOrder(list3).sort();
-list3.sort(naturalSort().sort());
 
 // [ { name: { first: 'adam', last: 'temple' } },
 //   { name: { first: 'bob', last: 'temple' } },
@@ -138,22 +109,18 @@ list3.sort(naturalSort().sort());
 const list4 = ["a", "B"];
 
 naturalOrder(list4).with({ caseSensitive: true }).sort();
-list4.sort(naturalSort().with({ caseSensitive: true }).sort());
 
 // ["B", "a"]
 
 const list5 = ["z", "", "a"];
 
 naturalOrder(list5).sort();
-list5.sort(naturalSort().sort());
 
 // ["a", "z", ""]
 
 naturalOrder(list5).with({ blankAtTop: true }).sort();
-list5.sort(naturalSort().with({ blankAtTop: true }).sort());
 
 // ["", "a", "z"]
-
 
 
 ```
@@ -161,6 +128,13 @@ list5.sort(naturalSort().with({ blankAtTop: true }).sort());
 <a id="/migration"></a>&nbsp;
 
 ## Migration
+
+### 2.x
+
+There are two major changes in version 2. First, the default import is now using ESM instead of CommonJS. If you are using `natural-order` in an environment that requires CommonJS, you will need to directly import `natural-order/dist/natural-order.umd.js`.
+
+Second, due to the focus being immutable sorting of values, I've removed the `naturalSort` method. While it was convenient to plug into the standard `array.sort` function, it did not maintain the immutability the main function provides. You will need to migrate to using `naturalOrder` directly.
+### 1.x
 
 All options from verion 0.3.0 are still available with the new API. Alternatively, if you prefer the old syntax, it is still available, but you will need to call `.sort()` still. 
 
@@ -180,15 +154,6 @@ sorted1[0] === sorted2[0] // true
 const sorted3 = naturalOrder(list, null, "desc", { caseSensitive: true }).sort()
 
 sorted1[0] === sorted3[0] // true
-
-```
-
-_Version 1.1.0_: The old syntax also works in the new `naturalSort()` method:
-
-
-```javascript
-
-list.sort(naturalSort(null, "desc", { caseSensitive: true })).sort();
 
 ```
 
