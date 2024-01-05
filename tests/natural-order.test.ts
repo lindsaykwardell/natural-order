@@ -144,7 +144,7 @@ describe("natural-order", () => {
   it("Allows similar API to 0.3.0", () => {
     const list = ["a", "b", "c"];
 
-    const sorted = naturalOrder(list, null, "desc").sort();
+    const sorted = naturalOrder(list, undefined, "desc").sort();
 
     expect(sorted).toEqual(["c", "b", "a"]);
   });
@@ -163,7 +163,7 @@ describe("natural-order", () => {
 
     // Alternative syntax
 
-    const sorted3 = naturalOrder(list, null, "desc", {
+    const sorted3 = naturalOrder(list, undefined, "desc", {
       caseSensitive: true,
     }).sort();
 
